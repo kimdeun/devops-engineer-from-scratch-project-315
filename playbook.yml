@@ -3,7 +3,7 @@
   become: true
 
   roles:
-    - ansible/roles/nginx
+    - nginx
 
   tasks:
     - name: Update apt cache
