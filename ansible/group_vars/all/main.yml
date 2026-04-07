@@ -1,0 +1,32 @@
+# Docker образ
+docker_image: "docker.io/123c/hexlet"
+docker_tag: "latest"
+container_name: "bulletin-board"
+
+# Порты
+app_port: "8080"
+management_port: "9090"
+
+# Директории
+app_data_dir: "/opt/bulletin-board/data"
+app_logs_dir: "/opt/bulletin-board/logs"
+
+# Nginx
+server_name: "hesss.sytes.net"
+
+# S3
+s3_endpoint: "https://storage.yandexcloud.net"
+s3_region: "ru-central1"
+s3_bucket: "bucket1testhexlet"
+
+# Переменные окружения приложения
+app_environment:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_DATASOURCE_URL: "{{ vault_db_url }}"
+  SPRING_DATASOURCE_USERNAME: "{{ vault_db_user }}"
+  SPRING_DATASOURCE_PASSWORD: "{{ vault_db_password }}"
+  STORAGE_S3_BUCKET: "{{ s3_bucket }}"
+  STORAGE_S3_REGION: "{{ s3_region }}"
+  STORAGE_S3_ENDPOINT: "{{ s3_endpoint }}"
+  STORAGE_S3_ACCESSKEY: "{{ vault_s3_access_key }}"
+  STORAGE_S3_SECRETKEY: "{{ vault_s3_secret_key }}"

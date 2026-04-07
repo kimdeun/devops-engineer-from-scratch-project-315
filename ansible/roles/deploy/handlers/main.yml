@@ -1,0 +1,14 @@
+- name: restart container
+  community.docker.docker_container:
+    name: "{{ container_name }}"
+    image: "{{ docker_image }}:{{ docker_tag }}"
+    state: started
+    restart: true
+    restart_policy: unless-stopped
+    ports:
+      - "{{ app_port }}:8080"
+      - "{{ management_port }}:9090"
+    env: "{{ app_environment }}"
+    volumes:
+      - "{{ app_data_dir }}:/app/data"
+      - "{{ app_logs_dir }}:/app/logs"

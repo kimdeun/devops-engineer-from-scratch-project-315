@@ -1,0 +1,21 @@
+- name: update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: nginx install
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+- name: Copy Nginx config
+  ansible.builtin.template:
+    src: nginx-http.conf.j2
+    dest: /etc/nginx/sites-available/bulletin-board
+  notify: Restart Nginx
+
+- name: Enable Nginx site
+  ansible.builtin.file:
+    src: /etc/nginx/sites-available/bulletin-board
+    dest: /etc/nginx/sites-enabled/bulletin-board
+    state: link
+  notify: Restart Nginx
