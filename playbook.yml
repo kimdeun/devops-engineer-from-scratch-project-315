@@ -1,12 +1,14 @@
-- hosts: servers
-  become: yes
+- name: Setup production server
+  hosts: servers
+  become: true
+
   roles:
-    - ansible/roles/nginx
+    - nginx
 
   tasks:
-    - name: update apt cache
+    - name: Update apt cache
       ansible.builtin.apt:
-        update_cache: yes
+        update_cache: true
         cache_valid_time: 3600
 
     - name: Install prerequisites
@@ -29,7 +31,7 @@
         state: present
         filename: docker
 
-    - name: install docker
+    - name: Install Docker
       ansible.builtin.apt:
         name:
           - docker-ce
@@ -37,35 +39,35 @@
           - containerd.io
           - docker-compose-plugin
         state: present
-        update_cache: yes
+        update_cache: true
 
-    - name: add user to docker group
+    - name: Add user to docker group
       ansible.builtin.user:
         name: "{{ ansible_user }}"
         groups: docker
-        append: yes
+        append: true
 
-    - name: enable ufw port 22
+    - name: Enable ufw port 22
       community.general.ufw:
         rule: allow
         port: "22"
 
-    - name: enable ufw port 80
+    - name: Enable ufw port 80
       community.general.ufw:
         rule: allow
         port: "80"
 
-    - name: enable ufw port 443
+    - name: Enable ufw port 443
       community.general.ufw:
         rule: allow
         port: "443"
 
-    - name: enable ufw port 8080
+    - name: Enable ufw port 8080
       community.general.ufw:
         rule: allow
         port: "8080"
 
-    - name: enable ufw port 9090
+    - name: Enable ufw port 9090
       community.general.ufw:
         rule: allow
         port: "9090"
@@ -76,7 +78,7 @@
         state: directory
         mode: "0700"
 
-    - name: download yandex cloud certificates
+    - name: Download Yandex Cloud certificates
       ansible.builtin.get_url:
         url: https://storage.yandexcloud.net/cloud-certs/CA.pem
         dest: /root/.postgresql/root.crt
@@ -111,6 +113,9 @@
 
     - name: Copy Nginx HTTPS config
       ansible.builtin.template:
-        src: "{{ playbook_dir }}/roles/nginx/templates/nginx-https.conf.j2"
+        src: ansible/roles/nginx/templates/nginx-https.conf.j2
         dest: /etc/nginx/sites-available/bulletin-board
+        mode: "0644"
+        owner: root
+        group: root
       notify: Restart Nginx
