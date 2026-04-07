@@ -2,7 +2,7 @@ ansible-install:
 	ansible-galaxy collection install -r requirements.yml
 
 deploy:
-	ansible-playbook -i ansible/inventory.ini ansible/deploy.yml --ask-vault-pass
+	ansible-playbook playbook.yml --ask-vault-pass
 
 rollback:
 	@if [ -z "$(ROLLBACK_TAG)" ]; then \
