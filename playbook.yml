@@ -2,10 +2,6 @@
   hosts: servers
   become: true
 
-  vars:
-    tls_primary_name: hesss.sytes.net
-    certbot_admin_email: kimdeun@yandex.ru
-
   roles:
     - nginx
 
@@ -36,41 +32,19 @@
         dest: /etc/apt/keyrings/docker.asc
         mode: "0644"
 
-    - name: Add Docker apt repository
-      ansible.builtin.apt_repository:
-        repo: >-
-          deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc]
-          https://download.docker.com/linux/ubuntu
-          {{ ansible_facts['distribution_release'] }} stable
-        filename: docker
-        state: present
-
-    - name: Install Docker Engine and Compose plugin
-      ansible.builtin.apt:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-          - docker-compose-plugin
-        state: present
-        update_cache: true
-
-    - name: Start and enable Docker
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: true
+    - name: Install Docker Engine (geerlingguy.docker)
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+      vars:
+        # Vendored key in repo; HTTPS to download.docker.com/gpg may time out on the host.
+        docker_apt_gpg_key: /etc/apt/keyrings/docker.asc
+        docker_users:
+          - "{{ ansible_user }}"
 
     - name: Install Docker SDK for Python (for community.docker modules)
       ansible.builtin.apt:
         name: python3-docker
         state: present
-
-    - name: Add user to docker group
-      ansible.builtin.user:
-        name: "{{ ansible_user }}"
-        groups: docker
-        append: true
 
     - name: Enable ufw port 22
       community.general.ufw:
@@ -118,26 +92,17 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-    - name: Install Certbot and nginx plugin
-      ansible.builtin.apt:
-        name:
-          - certbot
-          - python3-certbot-nginx
-        state: present
-
-    - name: Obtain TLS certificate with Certbot
-      ansible.builtin.command:
-        argv:
-          - certbot
-          - certonly
-          - --nginx
-          - --non-interactive
-          - --agree-tos
-          - --email
-          - "{{ certbot_admin_email }}"
-          - -d
-          - "{{ tls_primary_name }}"
-        creates: /etc/letsencrypt/live/{{ tls_primary_name }}/fullchain.pem
+    - name: Install Certbot and obtain certificate
+      ansible.builtin.include_role:
+        name: geerlingguy.certbot
+      vars:
+        certbot_install_method: package
+        certbot_create_if_missing: true
+        certbot_create_method: standalone
+        certbot_admin_email: kimdeun@yandex.ru
+        certbot_certs:
+          - domains:
+              - hesss.sytes.net
 
     - name: Copy Nginx HTTPS config
       ansible.builtin.template:

@@ -1,0 +1,6 @@
+exclude_paths:
+  - roles/geerlingguy.certbot/
+  - code/roles/geerlingguy.certbot/
+  - roles/geerlingguy.docker/
+  - code/roles/geerlingguy.docker/
+  - collections/
