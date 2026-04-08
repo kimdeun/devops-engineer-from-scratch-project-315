@@ -6,4 +6,6 @@ collections:
   - name: amazon.aws
     version: ">=7.0.0"
 
-roles: []
+roles:
+  - name: geerlingguy.certbot
+    src: geerlingguy.certbot
