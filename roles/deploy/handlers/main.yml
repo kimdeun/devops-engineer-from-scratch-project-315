@@ -1,4 +1,4 @@
-- name: restart container
+- name: Restart container
   community.docker.docker_container:
     name: "{{ container_name }}"
     image: "{{ docker_image }}:{{ docker_tag }}"

@@ -1,6 +1,5 @@
 ansible-install:
 	ansible-galaxy collection install -r requirements.yml -p collections
-	ansible-galaxy role install -r requirements.yml -p roles
 
 deploy:
 	ansible-playbook playbook.yml --ask-vault-pass

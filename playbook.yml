@@ -2,6 +2,10 @@
   hosts: servers
   become: true
 
+  vars:
+    tls_primary_name: hesss.sytes.net
+    certbot_admin_email: kimdeun@yandex.ru
+
   roles:
     - nginx
 
@@ -114,17 +118,26 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 
-    - name: Install Certbot and obtain certificate (geerlingguy.certbot)
-      ansible.builtin.include_role:
-        name: geerlingguy.certbot
-      vars:
-        certbot_install_method: package
-        certbot_create_if_missing: true
-        certbot_create_method: standalone
-        certbot_admin_email: kimdeun@yandex.ru
-        certbot_certs:
-          - domains:
-              - hesss.sytes.net
+    - name: Install Certbot and nginx plugin
+      ansible.builtin.apt:
+        name:
+          - certbot
+          - python3-certbot-nginx
+        state: present
+
+    - name: Obtain TLS certificate with Certbot
+      ansible.builtin.command:
+        argv:
+          - certbot
+          - certonly
+          - --nginx
+          - --non-interactive
+          - --agree-tos
+          - --email
+          - "{{ certbot_admin_email }}"
+          - -d
+          - "{{ tls_primary_name }}"
+        creates: /etc/letsencrypt/live/{{ tls_primary_name }}/fullchain.pem
 
     - name: Copy Nginx HTTPS config
       ansible.builtin.template:

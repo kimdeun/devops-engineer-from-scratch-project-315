@@ -20,7 +20,7 @@
     tag: "{{ docker_tag }}"
     source: pull
     force_source: true
-  notify: restart container
+  notify: Restart container
 
 - name: Start application container
   community.docker.docker_container:
