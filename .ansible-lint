@@ -1,4 +1,3 @@
-exclude_paths:
-  - "*geerlingguy.certbot*"
-  - "*geerlingguy.docker*"
-  - "*/collections/*"
+exclude:
+  - roles/geerlingguy.docker
+  - roles/geerlingguy.certbot
