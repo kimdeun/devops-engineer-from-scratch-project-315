@@ -1,3 +1,4 @@
+---
 exclude:
   - roles/geerlingguy.docker
   - roles/geerlingguy.certbot
