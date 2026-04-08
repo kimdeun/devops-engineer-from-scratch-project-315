@@ -1,0 +1,5 @@
+---
+# Third-party Galaxy role: not maintained in this repo; linting it produces noise only.
+exclude_paths:
+  - roles/geerlingguy.certbot/
+  - code/roles/geerlingguy.certbot/

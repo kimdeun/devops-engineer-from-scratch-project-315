@@ -19,7 +19,7 @@
     name: "{{ docker_image }}"
     tag: "{{ docker_tag }}"
     source: pull
-    force_source: yes
+    force_source: true
   notify: restart container
 
 - name: Start application container

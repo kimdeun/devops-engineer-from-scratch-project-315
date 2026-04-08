@@ -1,6 +1,6 @@
 - name: deploy app
   hosts: servers
-  become: yes
+  become: true
 
   roles:
     - deploy
