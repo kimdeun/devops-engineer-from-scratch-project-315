@@ -2,10 +2,10 @@ ansible-install:
 	ansible-galaxy collection install -r requirements.yml -p collections
 	ansible-galaxy role install -r requirements.yml -p roles
 
-deploy:
+deploy: ansible-install
 	ansible-playbook playbook.yml --ask-vault-pass
 
-rollback:
+rollback: ansible-install
 	@if [ -z "$(ROLLBACK_TAG)" ]; then \
 		echo "Укажите ROLLBACK_TAG"; \
 		exit 1; \

@@ -1,0 +1,4 @@
+# Ставятся из requirements.yml: ansible-galaxy collection install / role install
+collections/
+roles/geerlingguy.certbot/
+roles/geerlingguy.docker/
