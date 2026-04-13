@@ -1,6 +1,8 @@
 - name: Deploy app
   hosts: servers
   become: true
+  serial: "{{ ansible_rollout_serial | default('100%') }}"
+  max_fail_percentage: "{{ ansible_rollout_max_fail_percentage | default(0) }}"
 
   roles:
     - deploy
