@@ -1,6 +1,9 @@
 # Docker образ
 docker_image: "docker.io/123c/hexlet"
-docker_tag: "latest"
+# На Docker Hub теги latest и sha-969acb1 (один и тот же индекс) — только linux/arm64.
+# Облачная ВМ — amd64: смотрите колонку Architecture=amd64 у тега, не копируйте «верхний» sha рядом с latest.
+# Пример рабочего тега под amd64: sha-6f6ba28 — https://hub.docker.com/r/123c/hexlet/tags
+docker_tag: "sha-6f6ba28"
 container_name: "bulletin-board"
 
 # Порты
